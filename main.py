@@ -2,9 +2,13 @@ import os
 import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils.executor import start_webhook
+from dotenv import load_dotenv
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+
+# Load environment variables from .env if present
+load_dotenv()
 
 # Environment variables
 BOT_TOKEN    = os.getenv("BOT_TOKEN")

@@ -18,15 +18,10 @@ dp = Dispatcher(bot)
 
 # Main menu keyboard
 def main_menu_keyboard():
-    kb = types.InlineKeyboardMarkup(row_width=2)
-    kb.add(
-        types.InlineKeyboardButton("⚙️ Настройки", callback_data="settings"),
-        types.InlineKeyboardButton("📈 Калькулятор", callback_data="calculator"),
-    )
-    kb.add(
-        types.InlineKeyboardButton("📜 История", callback_data="history"),
-        types.InlineKeyboardButton("🔥 Топ-сделки", callback_data="top_deals"),
-    )
+    """Return persistent menu for the bottom of the chat."""
+    kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.row("⚙️ Настройки", "📈 Калькулятор")
+    kb.row("📜 История", "🔥 Топ-сделки")
     return kb
 
 # Handlers
@@ -41,19 +36,23 @@ async def cmd_start(message: types.Message):
 async def cmd_ping(message: types.Message):
     await message.reply("pong")
 
-# Callback query handler for menu
-@dp.callback_query_handler(lambda c: c.data in ["settings", "calculator", "history", "top_deals"])
-async def process_menu_callback(callback: types.CallbackQuery):
-    data = callback.data
-    if data == "settings":
-        await callback.message.edit_text("Здесь будут настройки пользователя.")
-    elif data == "calculator":
-        await callback.message.edit_text("Здесь калькулятор прибыли.")
-    elif data == "history":
-        await callback.message.edit_text("Здесь история сделок.")
-    elif data == "top_deals":
-        await callback.message.edit_text("Архив топ-сделок дня.")
-    await callback.answer()
+
+# Handlers for persistent menu buttons
+@dp.message_handler(lambda m: m.text == "⚙️ Настройки")
+async def menu_settings(message: types.Message):
+    await message.answer("Здесь будут настройки пользователя.")
+
+@dp.message_handler(lambda m: m.text == "📈 Калькулятор")
+async def menu_calculator(message: types.Message):
+    await message.answer("Здесь калькулятор прибыли.")
+
+@dp.message_handler(lambda m: m.text == "📜 История")
+async def menu_history(message: types.Message):
+    await message.answer("Здесь история сделок.")
+
+@dp.message_handler(lambda m: m.text == "🔥 Топ-сделки")
+async def menu_top_deals(message: types.Message):
+    await message.answer("Архив топ-сделок дня.")
 
 # Startup and shutdown
 async def on_startup(_):

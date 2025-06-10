@@ -13,6 +13,10 @@ load_dotenv()
 # Environment variables
 BOT_TOKEN    = os.getenv("BOT_TOKEN")
 WEBHOOK_URL  = os.getenv("WEBHOOK_URL")  # https://…/webhook
+if not BOT_TOKEN or not WEBHOOK_URL:
+    raise RuntimeError(
+        "BOT_TOKEN and WEBHOOK_URL must be set in the environment"
+    )
 WEBHOOK_PATH = "/webhook"
 PORT         = int(os.environ.get("PORT", 8443))
 
